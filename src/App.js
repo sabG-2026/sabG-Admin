@@ -4,7 +4,7 @@ import { supabase } from "./supabase";
 const DEFAULT_FORM = {
   name: "",
   price: "",
-  originalPrice: "",
+  original_price: "",
   category: "",
   image: "",
   unit: "piece",
@@ -79,7 +79,7 @@ export default function App() {
 
   const normalizeProductPayload = (raw) => {
     const price = Number(raw.price || 0);
-    const originalPrice = Number(raw.originalPrice || 0);
+    const originalPrice = Number(raw.original_price || 0);
     const discount =
       raw.discount !== "" && raw.discount !== null && raw.discount !== undefined
         ? Number(raw.discount)
@@ -96,7 +96,7 @@ export default function App() {
       name: raw.name.trim(),
       category: raw.category.trim(),
       price,
-      originalPrice,
+      original_price,
       unit: raw.unit?.trim() || "piece",
       badge: raw.badge?.trim() || null,
       image: raw.image?.trim() || null,
@@ -119,7 +119,7 @@ export default function App() {
     const { data, error } = await supabase
       .from("products")
       .select("*")
-      .order("createdAt", { ascending: false });
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("fetchProducts error:", error);
@@ -151,7 +151,7 @@ export default function App() {
     const { data, error } = await supabase
       .from("orders")
       .select("*")
-      .order("createdAt", { ascending: false });
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("fetchOrders error:", error);
@@ -167,7 +167,7 @@ export default function App() {
     const { data, error } = await supabase
       .from("offers")
       .select("*")
-      .order("createdAt", { ascending: false });
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("fetchOffers error:", error);
@@ -182,7 +182,7 @@ export default function App() {
     const { data, error } = await supabase
       .from("banners")
       .select("*")
-      .order("createdAt", { ascending: false });
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("fetchBanners error:", error);
@@ -258,6 +258,7 @@ export default function App() {
       subscribeTable("offers", fetchOffers),
       subscribeTable("banners", fetchBanners),
       subscribeTable("config", fetchSettings),
+      subscribeTable("settings", fetchSettings),
     ];
 
     return () => {
@@ -364,7 +365,7 @@ export default function App() {
     setForm({
       name: product.name || "",
       price: product.price ?? "",
-      originalPrice: product.originalPrice ?? "",
+      original_price: product.original_price ?? "",
       category: product.category || "",
       image: product.image || "",
       unit: product.unit || "piece",
@@ -687,9 +688,9 @@ export default function App() {
         <input
           style={styles.input}
           placeholder="Original Price"
-          value={form.originalPrice}
+          value={form.original_price}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, originalPrice: e.target.value }))
+            setForm((prev) => ({ ...prev, original_price: e.target.value }))
           }
         />
         <input
@@ -901,7 +902,7 @@ export default function App() {
               <div style={styles.smallText}>Category: {p.category}</div>
               <div style={styles.smallText}>Price: ₹{Number(p.price || 0).toFixed(2)}</div>
               <div style={styles.smallText}>
-                Original Price: ₹{Number(p.originalPrice || 0).toFixed(2)}
+                Original Price: ₹{Number(p.original_price || 0).toFixed(2)}
               </div>
               <div style={styles.smallText}>Unit: {p.unit || "piece"}</div>
               <div style={styles.smallText}>Discount: {p.discount || 0}%</div>
@@ -972,7 +973,7 @@ export default function App() {
               <div><strong>Payment Method:</strong> {o.paymentMethod || "-"}</div>
               <div><strong>Promo Code:</strong> {o.promoCode || "-"}</div>
               <div><strong>Status:</strong> {o.status}</div>
-              <div><strong>Created:</strong> {o.createdAt ? new Date(o.createdAt).toLocaleString() : "-"}</div>
+              <div><strong>Created:</strong> {o.created_at ? new Date(o.created_at).toLocaleString() : "-"}</div>
 
               <details style={{ marginTop: 10 }}>
                 <summary>Items</summary>
